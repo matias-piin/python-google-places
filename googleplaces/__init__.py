@@ -325,7 +325,7 @@ class GooglePlaces(object):
                 break
             if not places_response.get('next_page_token'):
                 break
-            time.sleep(0.5)
+            time.sleep(1)
             next_page_token = places_response.get('next_page_token')
             self._request_params['pagetoken'] = next_page_token
 
