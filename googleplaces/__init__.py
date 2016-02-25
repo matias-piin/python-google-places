@@ -316,7 +316,15 @@ class GooglePlaces(object):
         while True:
             url, places_response = _fetch_remote_json(
                     GooglePlaces.TEXT_SEARCH_API_URL, self._request_params)
+            try:
+                _validate_response(url, places_response)
+            except:
+                # try one more time
+                url, places_response = _fetch_remote_json(
+                    GooglePlaces.TEXT_SEARCH_API_URL, self._request_params)
+
             _validate_response(url, places_response)
+                
             if not final_response:
                 final_response = places_response
             else:
@@ -325,7 +333,6 @@ class GooglePlaces(object):
                 break
             if not places_response.get('next_page_token'):
                 break
-            time.sleep(1)
             next_page_token = places_response.get('next_page_token')
             self._request_params['pagetoken'] = next_page_token
 
