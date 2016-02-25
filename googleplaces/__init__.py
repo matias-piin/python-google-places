@@ -760,7 +760,7 @@ class GooglePlacesSearchResult(object):
         return self._response
 
     @property
-    def has_more_results(self)
+    def has_more_results(self):
         return len(self._places) >= 40
 
     @property
