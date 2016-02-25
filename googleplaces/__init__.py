@@ -768,7 +768,7 @@ class GooglePlacesSearchResult(object):
 
     @property
     def has_more_results(self):
-        return len(self._places) >= 40
+        return len(self._places) >= 60
 
     @property
     def next_page_token(self):
