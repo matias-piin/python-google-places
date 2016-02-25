@@ -28,6 +28,7 @@ except ImportError:
     pass
 
 import warnings
+import time
 
 from . import lang
 from . import ranking
@@ -315,17 +316,15 @@ class GooglePlaces(object):
         while True:
             url, places_response = _fetch_remote_json(
                     GooglePlaces.TEXT_SEARCH_API_URL, self._request_params)
-            print 'response!!!:::: ' + str(places_response)
             _validate_response(url, places_response)
             if not final_response:
                 final_response = places_response
             else:
                 final_response['results'].append(places_response['results'])
-            print 'next page token: '
             if not places_response.get('next_page_token'):
                 break
+            time.sleep(0.5)
             next_page_token = places_response.get('next_page_token')
-            print next_page_token
             self._request_params['pagetoken'] = next_page_token
 
         return GooglePlacesSearchResult(self, final_response)
