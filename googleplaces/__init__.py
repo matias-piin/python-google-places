@@ -320,9 +320,11 @@ class GooglePlaces(object):
                 final_response = places_response
             else:
                 final_response['results'].append(places_response['results'])
+            print 'next page token: '
             if not places_response.get('next_page_token'):
                 break
             next_page_token = places_response.get('next_page_token')
+            print next_page_token
             self._request_params['pagetoken'] = next_page_token
 
         return GooglePlacesSearchResult(self, final_response)
