@@ -315,6 +315,7 @@ class GooglePlaces(object):
         while True:
             url, places_response = _fetch_remote_json(
                     GooglePlaces.TEXT_SEARCH_API_URL, self._request_params)
+            print 'response!!!:::: ' + places_response
             _validate_response(url, places_response)
             if not final_response:
                 final_response = places_response
