@@ -329,7 +329,7 @@ class GooglePlaces(object):
             if not final_response:
                 final_response = places_response
             else:
-                final_response['results'].concat(places_response['results'])
+                final_response['results'] = final_response['results'] + places_response['results']
 
             if not places_response.get('next_page_token'):
                 break
