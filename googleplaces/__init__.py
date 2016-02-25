@@ -311,10 +311,21 @@ class GooglePlaces(object):
         if language is not None:
             self._request_params['language'] = language
         self._add_required_param_keys()
-        url, places_response = _fetch_remote_json(
-                GooglePlaces.TEXT_SEARCH_API_URL, self._request_params)
-        _validate_response(url, places_response)
-        return GooglePlacesSearchResult(self, places_response)
+        final_response = {}
+        while True:
+            url, places_response = _fetch_remote_json(
+                    GooglePlaces.TEXT_SEARCH_API_URL, self._request_params)
+            _validate_response(url, places_response)
+            if not final_response:
+                final_response = places_response
+            else:
+                final_response['results'].append(places_response['results'])
+            if not places_response.get('next_page_token'):
+                break
+            next_page_token = places_response.get('next_page_token')
+            self._request_params['pagetoken'] = next_page_token
+
+        return GooglePlacesSearchResult(self, final_response)
 
     def autocomplete(self, input, lat_lng=None, location=None, radius=3200,
                      language=lang.ENGLISH, types=None, components=[]):
@@ -743,6 +754,10 @@ class GooglePlacesSearchResult(object):
         Returns the raw JSON response returned by the Places API.
         """
         return self._response
+
+    @property
+    def next_page_token(self):
+        return self._response.get('next_page_token')
 
     @property
     def places(self):
