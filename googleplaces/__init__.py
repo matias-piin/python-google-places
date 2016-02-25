@@ -320,10 +320,12 @@ class GooglePlaces(object):
             if not final_response:
                 final_response = places_response
             else:
+                # don't bother with last page, we will rerun if needed
                 final_response['results'].append(places_response['results'])
+                break
             if not places_response.get('next_page_token'):
                 break
-            time.sleep(1)
+            time.sleep(0.5)
             next_page_token = places_response.get('next_page_token')
             self._request_params['pagetoken'] = next_page_token
 
@@ -756,6 +758,10 @@ class GooglePlacesSearchResult(object):
         Returns the raw JSON response returned by the Places API.
         """
         return self._response
+
+    @property
+    def has_more_results(self)
+        return len(self._places) >= 40
 
     @property
     def next_page_token(self):
