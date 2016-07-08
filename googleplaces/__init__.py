@@ -314,18 +314,18 @@ class GooglePlaces(object):
         self._add_required_param_keys()
         final_response = {}
         while True:
-            url, places_response = _fetch_remote_json(
-                    GooglePlaces.TEXT_SEARCH_API_URL, self._request_params)
-            try:
-                _validate_response(url, places_response)
-            except:
-                # try one more time
-                time.sleep(2)
-                url, places_response = _fetch_remote_json(
-                    GooglePlaces.TEXT_SEARCH_API_URL, self._request_params)
+            for delay in [0, 1, 2, 4]:
+                try:
+                    time.sleep(delay)
+                    url, places_response = _fetch_remote_json(GooglePlaces.TEXT_SEARCH_API_URL, self._request_params)
+                    _validate_response(url, places_response)
+                    # we got what we needed lets get out
+                    break
+                except:
+                    pass
 
             _validate_response(url, places_response)
-                
+
             if not final_response:
                 final_response = places_response
             else:
